@@ -1,0 +1,13 @@
+db:
+  image: postgres
+  environment:
+    - POSTGRES_USER=hackdash
+    - POSTGRES_PASSWORD=hackdash
+web:
+  build: .
+  volumes:
+    - .:/code
+  ports:
+    - "6060:8080"
+  links:
+    - db

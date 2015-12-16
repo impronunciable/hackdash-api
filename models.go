@@ -9,7 +9,7 @@ var db gorm.DB
 
 func InitDB(dbConfig string) {
     var err error
-    db, err = gorm.Open(dbConfig)
+    db, err = gorm.Open("postgres", dbConfig)
     if err != nil {
 		panic(err)
 	}
