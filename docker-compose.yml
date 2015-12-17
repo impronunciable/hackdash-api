@@ -7,6 +7,8 @@ web:
   build: .
   volumes:
     - .:/code
+  command: bash -c "sleep 3 && go build && ./app"
+  working_dir: /go/src/app
   ports:
     - "6060:8080"
   links:
