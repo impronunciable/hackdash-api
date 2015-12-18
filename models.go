@@ -1,6 +1,8 @@
 package main
 
 import (
+    "strconv"
+    "github.com/labstack/echo"
     "github.com/jinzhu/gorm"
     _ "github.com/lib/pq"
 )
@@ -69,4 +71,18 @@ type Collection struct {
     Title       string      `valid:"required,alphanum,length(1|50)"`
     Description string
     Dashboards  []Dashboard `gorm:"many2many:collection_dashboards;"`
+}
+
+// Model pagination
+func Paginate(s *gorm.DB, c *echo.Context) *gorm.DB {
+    page, _ := strconv.ParseUint(c.Query("page"), 10, 64)
+    limit, _ := strconv.ParseUint(c.Query("limit"), 10, 64)
+
+    // Check for edge case of page 0
+    if page == 0 {
+        page = 1
+    }
+    offset := page - 1
+    offset = limit * offset
+    return s.Limit(limit).Offset(offset)
 }
