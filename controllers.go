@@ -1,47 +1,56 @@
 package main
 
 import (
-    "strconv"
-    "net/http"
-    "github.com/labstack/echo"
+	"github.com/labstack/echo"
+	"net/http"
+	"strconv"
 )
 
 func InitV3Routes(r *echo.Group) {
-    // V3 routes definition
+	// V3 routes definition
 
-    // Dashboards
-    r.Get("/dashboards", listDashboards)
-    r.Get("/dashboards/:id", getDashboard)
-    //r.Post("/dashboards", createDashboard)
-    //r.Patch("/dashboards/:id", updateDashboard)
-    r.Delete("/dashboards/:id", deleteDashboard)
+	// Dashboards
+	r.Get("/dashboards", listDashboards)
+	r.Get("/dashboards/:id", getDashboard)
+	//r.Post("/dashboards", createDashboard)
+	//r.Patch("/dashboards/:id", updateDashboard)
+	r.Delete("/dashboards/:id", deleteDashboard)
 }
 
 // Dashboard controllers
 func listDashboards(c *echo.Context) error {
-    dashboards := []Dashboard{}
-    Paginate(&db, c).Find(&dashboards)
-    return c.JSON(http.StatusOK, dashboards)
+	dashboards := []Dashboard{}
+	Paginate(&db, c).Find(&dashboards)
+	return c.JSON(http.StatusOK, dashboards)
 }
 
 func getDashboard(c *echo.Context) error {
-    dashboard := Dashboard{}
-    id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
-    if db.First(&dashboard, id).RecordNotFound() {
-        return echo.NewHTTPError(http.StatusNotFound)
-    }
-    return c.JSON(http.StatusOK, dashboard)
+	dashboard := Dashboard{}
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "id parameter missing or not a number")
+	}
+
+	if db.First(&dashboard, id).RecordNotFound() {
+		return echo.NewHTTPError(http.StatusNotFound)
+	}
+
+	return c.JSON(http.StatusOK, dashboard)
 }
 
 func deleteDashboard(c *echo.Context) error {
-    dashboard := Dashboard{}
-    id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	dashboard := Dashboard{}
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 
-    if db.First(&dashboard, id).RecordNotFound() {
-        return echo.NewHTTPError(http.StatusNotFound)
-    }
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "id parameter missing or not a number")
+	}
 
-    db.Delete(&dashboard)
+	if db.First(&dashboard, id).RecordNotFound() {
+		return echo.NewHTTPError(http.StatusNotFound)
+	}
 
-    return c.NoContent(http.StatusNoContent)
+	db.Delete(&dashboard)
+	return c.NoContent(http.StatusNoContent)
 }
