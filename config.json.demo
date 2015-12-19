@@ -1,0 +1,7 @@
+{
+  "port": 8080,
+  "database": "host=db user=hackdash dbname=hackdash password=hackdash sslmode=disable",
+  "auth0_secret":"...",
+  "auth0_client_id":"...",
+  "auth0_domain":"{...}.auth0.com"
+}
