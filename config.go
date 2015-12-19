@@ -1,14 +1,17 @@
 package main
 
 import (
-	"os"
 	"encoding/json"
 	"log"
+	"os"
 )
 
 type Configuration struct {
-	Port		uint	`json:"port"`
-	Database	string	`json:"database"`
+	Port          uint   `json:"port"`
+	Database      string `json:"database"`
+	Auth0Secret   string `json:"auth0_secret"`
+	Auth0ClientId string `json:"auth0_client_id"`
+	Auth0Domain   string `json:"auth0_domain"`
 }
 
 func LoadConfig() *Configuration {

@@ -23,5 +23,7 @@ _testmain.go
 *.test
 *.prof
 
+config.json
+
 # Binary
 hackdash-api

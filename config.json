@@ -1,4 +1,0 @@
-{
-	"port": 8080,
-	"database": "host=db user=hackdash dbname=hackdash password=hackdash sslmode=disable"
-}
