@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
+	"log"
+	"os"
 )
+
+var logger = log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lshortfile)
 
 func main() {
 	// Create app
@@ -35,5 +39,6 @@ func main() {
 	// Initialize database
 	// InitDB(config.Database)
 
+	logger.Printf("application running on port %d", config.Port)
 	app.Run(fmt.Sprintf(":%d", config.Port))
 }
