@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"github.com/jinzhu/gorm"
@@ -7,19 +7,19 @@ import (
 	"strconv"
 )
 
-var db gorm.DB
+var DB gorm.DB
 
 func InitDB(dbConfig string) {
 	var err error
-	db, err = gorm.Open("postgres", dbConfig)
+	DB, err = gorm.Open("postgres", dbConfig)
 	if err != nil {
 		panic(err)
 	}
 
-	db.AutoMigrate(&Dashboard{})
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Project{})
-	db.AutoMigrate(&Collection{})
+	DB.AutoMigrate(&Dashboard{})
+	DB.AutoMigrate(&User{})
+	DB.AutoMigrate(&Project{})
+	DB.AutoMigrate(&Collection{})
 }
 
 type Dashboard struct {
@@ -43,6 +43,10 @@ type User struct {
 	Email  string `valid:"required,email"`
 	Avatar string `valid:"url"`
 	Bio    string
+
+	Auth0Id   string `valid:"required,alphanum,length(1|150)"`
+	Provider  string `valid:"required,alphanum,length(1|50)"`
+	ProviderId string `valid:"required,alphanum,length(1|100)"`
 }
 
 type Project struct {

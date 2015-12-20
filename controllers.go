@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/models"
 	"github.com/labstack/echo"
 	"net/http"
 	"strconv"
@@ -19,20 +20,20 @@ func InitV3Routes(r *echo.Group) {
 
 // Dashboard controllers
 func listDashboards(c *echo.Context) error {
-	dashboards := []Dashboard{}
-	Paginate(&db, c).Find(&dashboards)
+	dashboards := []models.Dashboard{}
+	models.Paginate(&models.DB, c).Find(&dashboards)
 	return c.JSON(http.StatusOK, dashboards)
 }
 
 func getDashboard(c *echo.Context) error {
-	dashboard := Dashboard{}
+	dashboard := models.Dashboard{}
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "id parameter missing or not a number")
 	}
 
-	if db.First(&dashboard, id).RecordNotFound() {
+	if models.DB.First(&dashboard, id).RecordNotFound() {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
@@ -40,17 +41,17 @@ func getDashboard(c *echo.Context) error {
 }
 
 func deleteDashboard(c *echo.Context) error {
-	dashboard := Dashboard{}
+	dashboard := models.Dashboard{}
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "id parameter missing or not a number")
 	}
 
-	if db.First(&dashboard, id).RecordNotFound() {
+	if models.DB.First(&dashboard, id).RecordNotFound() {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
-	db.Delete(&dashboard)
+	models.DB.Delete(&dashboard)
 	return c.NoContent(http.StatusNoContent)
 }
