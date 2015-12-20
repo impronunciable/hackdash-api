@@ -12,6 +12,7 @@ type Configuration struct {
 	Auth0Secret   string `json:"auth0_secret"`
 	Auth0ClientId string `json:"auth0_client_id"`
 	Auth0Domain   string `json:"auth0_domain"`
+	DevMode       bool   `json:"devMode"`
 }
 
 func LoadConfig() *Configuration {

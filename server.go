@@ -33,7 +33,11 @@ func main() {
 
 	// Initialize router. v3 is the first version for compatibility reasons
 	v3Router := app.Group("/v3")
-	v3Router.Use(jwtMiddleware.Handler())
+	if !config.DevMode {
+		v3Router.Use(jwtMiddleware.Handler())
+	} else {
+		logger.Printf("devMode is on, auth handler unregistered.")
+	}
 	InitV3Routes(v3Router)
 
 	// Initialize database
