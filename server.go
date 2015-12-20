@@ -4,6 +4,7 @@ import (
 	"app/middleware/auth"
 	"app/middleware/users"
 	"app/models"
+	"app/controllers"
 	"fmt"
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
@@ -50,7 +51,7 @@ func main() {
 		logger.Printf("devMode is on, auth handler unregistered.")
 	}
 
-	InitV3Routes(v3Router)
+	controllers.InitV3Routes(v3Router)
 
 	logger.Printf("application running on port %d", config.Port)
 	app.Run(fmt.Sprintf(":%d", config.Port))

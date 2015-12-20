@@ -2,7 +2,6 @@ package users
 
 import (
   "app/models"
-  "fmt"
   "github.com/labstack/echo"
 )
 
@@ -30,16 +29,11 @@ func (me *UsersMiddleware) Handler() echo.HandlerFunc {
 
     if models.DB.Where(&models.User{Auth0Id: sub}).First(&user).RecordNotFound() {
 
-      fmt.Printf("USER DOES NOT EXISTS\n")
-
       models.DB.Create(&models.User{
         Auth0Id: sub,
       })
 
     }
-
-    fmt.Printf("CLAIMS %+v\n", claims)
-    fmt.Printf("USER %+v\n", user)
 
     c.Set("User", user)
 
