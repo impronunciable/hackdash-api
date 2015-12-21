@@ -2,6 +2,9 @@ package main
 
 import (
 	"app/middleware/auth"
+	"app/middleware/users"
+	"app/models"
+	"app/controllers"
 	"fmt"
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
@@ -25,7 +28,8 @@ func main() {
 		panic(error)
 	}
 
-	jwtMiddleware := auth.NewJwtMiddleware("Bearer", auth0Secret, config.Auth0ClientId)
+	//Initialize database
+	models.InitDB(config.Database)
 
 	// Basic middleware
 	app.Use(mw.Logger())
@@ -33,15 +37,21 @@ func main() {
 
 	// Initialize router. v3 is the first version for compatibility reasons
 	v3Router := app.Group("/v3")
+
 	if !config.DevMode {
+
+		//Init middlewares
+		jwtMiddleware := auth.NewJwtMiddleware("Bearer", auth0Secret, config.Auth0ClientId)
+		usersMiddleware := users.NewUsersMiddleware()
+
 		v3Router.Use(jwtMiddleware.Handler())
+		v3Router.Use(usersMiddleware.Handler())
+
 	} else {
 		logger.Printf("devMode is on, auth handler unregistered.")
 	}
-	InitV3Routes(v3Router)
 
-	// Initialize database
-	// InitDB(config.Database)
+	controllers.InitV3Routes(v3Router)
 
 	logger.Printf("application running on port %d", config.Port)
 	app.Run(fmt.Sprintf(":%d", config.Port))

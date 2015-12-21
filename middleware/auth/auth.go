@@ -57,6 +57,7 @@ func (me *JWTMiddleware) Handler() echo.HandlerFunc {
       if err == nil && t.Valid {
         // Store token claims in echo.Context
         c.Set("claims", t.Claims)
+
         return nil
       }
     }
