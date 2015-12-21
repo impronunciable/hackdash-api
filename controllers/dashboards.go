@@ -47,7 +47,9 @@ func createDashboard(c *echo.Context) error {
 	}
 	dashboard.UserID = c.Get("User").(models.User).ID
 
-	models.DB.Save(&dashboard)
+	if err := models.DB.Save(&dashboard).Error; err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 	return c.JSON(http.StatusCreated, &dashboard)
 }
 
@@ -72,13 +74,17 @@ func updateDashboard(c *echo.Context) error {
 		return err
 	}
 
-	models.DB.Model(&dashboard).Updates(map[string]interface{}{
+	record := map[string]interface{}{
 		"slug":        updatedData.Slug,
 		"title":       updatedData.Title,
 		"description": updatedData.Description,
 		"link":        updatedData.Link,
 		"open":        updatedData.Open,
-	})
+	}
+
+	if err := models.DB.Model(&dashboard).Updates(&record).Error; err != nil {
+		return err
+	}
 	return c.JSON(http.StatusOK, &dashboard)
 }
 
@@ -98,6 +104,9 @@ func deleteDashboard(c *echo.Context) error {
 		return echo.NewHTTPError(http.StatusForbidden)
 	}
 
-	models.DB.Delete(&dashboard)
+	if err := models.DB.Delete(&dashboard).Error; err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
 	return c.NoContent(http.StatusNoContent)
 }

@@ -1,10 +1,12 @@
 package models
 
 import (
+	"strconv"
+
+	"github.com/asaskevich/govalidator"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 	_ "github.com/lib/pq"
-	"strconv"
 )
 
 var DB gorm.DB
@@ -22,7 +24,10 @@ func InitDB(dbConfig string) {
 	DB.AutoMigrate(&Collection{})
 }
 
+type HackDashModel struct{}
+
 type Dashboard struct {
+	HackDashModel
 	gorm.Model
 	Slug        string `json:"Slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
 	Title       string `json:"title" valid:"required,alphanum,length(1|50)"`
@@ -33,23 +38,26 @@ type Dashboard struct {
 }
 
 type Cover struct {
+	HackDashModel
 	ID  uint   `gorm:"primary_key"`
 	Url string `valid:"url"`
 }
 
 type User struct {
+	HackDashModel
 	gorm.Model
 	Name   string `valid:"required,alphanum,length(1|50)"`
 	Email  string `valid:"required,email"`
 	Avatar string `valid:"url"`
 	Bio    string
 
-	Auth0Id   string `valid:"required,alphanum,length(1|150)"`
-	Provider  string `valid:"required,alphanum,length(1|50)"`
+	Auth0Id    string `valid:"required,alphanum,length(1|150)"`
+	Provider   string `valid:"required,alphanum,length(1|50)"`
 	ProviderId string `valid:"required,alphanum,length(1|100)"`
 }
 
 type Project struct {
+	HackDashModel
 	gorm.Model
 	Title        string `valid:"required,alphanum,length(1|50)"`
 	Description  string
@@ -65,11 +73,13 @@ type Project struct {
 }
 
 type Tag struct {
+	HackDashModel
 	ID    uint   `gorm:"primary_key"`
 	Value string `valid:"required,alphanum"`
 }
 
 type Collection struct {
+	HackDashModel
 	gorm.Model
 	UserID      uint   `sql:"index"`
 	Title       string `valid:"required,alphanum,length(1|50)"`
@@ -89,4 +99,9 @@ func Paginate(s *gorm.DB, c *echo.Context) *gorm.DB {
 	offset := page - 1
 	offset = limit * offset
 	return s.Limit(limit).Offset(offset)
+}
+
+func (d *Dashboard) BeforeSave() (err error) {
+	_, err = govalidator.ValidateStruct(d)
+	return
 }
