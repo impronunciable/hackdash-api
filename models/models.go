@@ -24,10 +24,7 @@ func InitDB(dbConfig string) {
 	DB.AutoMigrate(&Collection{})
 }
 
-type HackDashModel struct{}
-
 type Dashboard struct {
-	HackDashModel
 	gorm.Model
 	Slug        string `json:"Slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
 	Title       string `json:"title" valid:"required,alphanum,length(1|50)"`
@@ -38,13 +35,11 @@ type Dashboard struct {
 }
 
 type Cover struct {
-	HackDashModel
 	ID  uint   `gorm:"primary_key"`
 	Url string `valid:"url"`
 }
 
 type User struct {
-	HackDashModel
 	gorm.Model
 	Name   string `valid:"required,alphanum,length(1|50)"`
 	Email  string `valid:"required,email"`
@@ -57,7 +52,6 @@ type User struct {
 }
 
 type Project struct {
-	HackDashModel
 	gorm.Model
 	Title        string `valid:"required,alphanum,length(1|50)"`
 	Description  string
@@ -73,13 +67,11 @@ type Project struct {
 }
 
 type Tag struct {
-	HackDashModel
 	ID    uint   `gorm:"primary_key"`
 	Value string `valid:"required,alphanum"`
 }
 
 type Collection struct {
-	HackDashModel
 	gorm.Model
 	UserID      uint   `sql:"index"`
 	Title       string `valid:"required,alphanum,length(1|50)"`
