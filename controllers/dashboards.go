@@ -42,13 +42,14 @@ func getDashboard(c *echo.Context) error {
 func createDashboard(c *echo.Context) error {
 	dashboard := models.Dashboard{}
 
-	if err := c.Bind(&dashboard); err != nil {
+	if err := Decode(c, &dashboard); err != nil {
 		return err
 	}
 	dashboard.UserID = c.Get("User").(models.User).ID
 
 	if err := models.DB.Save(&dashboard).Error; err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		logger.Printf("error while saving dashboard %v: %v", err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "")
 	}
 	return c.JSON(http.StatusCreated, &dashboard)
 }

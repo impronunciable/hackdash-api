@@ -24,7 +24,15 @@ func InitDB(dbConfig string) {
 	DB.AutoMigrate(&Collection{})
 }
 
+type Validable struct{}
+
+func (d *Validable) Validate() error {
+	_, err := govalidator.ValidateStruct(d)
+	return err
+}
+
 type Dashboard struct {
+	Validable
 	gorm.Model
 	Slug        string `json:"Slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
 	Title       string `json:"title" valid:"required,alphanum,length(1|50)"`
@@ -40,6 +48,7 @@ type Cover struct {
 }
 
 type User struct {
+	Validable
 	gorm.Model
 	Name   string `valid:"required,alphanum,length(1|50)"`
 	Email  string `valid:"required,email"`
@@ -52,6 +61,7 @@ type User struct {
 }
 
 type Project struct {
+	Validable
 	gorm.Model
 	Title        string `valid:"required,alphanum,length(1|50)"`
 	Description  string
@@ -72,6 +82,7 @@ type Tag struct {
 }
 
 type Collection struct {
+	Validable
 	gorm.Model
 	UserID      uint   `sql:"index"`
 	Title       string `valid:"required,alphanum,length(1|50)"`
@@ -91,9 +102,4 @@ func Paginate(s *gorm.DB, c *echo.Context) *gorm.DB {
 	offset := page - 1
 	offset = limit * offset
 	return s.Limit(limit).Offset(offset)
-}
-
-func (d *Dashboard) BeforeSave() (err error) {
-	_, err = govalidator.ValidateStruct(d)
-	return
 }
