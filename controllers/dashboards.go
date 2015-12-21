@@ -43,7 +43,7 @@ func createDashboard(c *echo.Context) error {
 	dashboard := models.Dashboard{}
 
 	if err := Decode(c, &dashboard); err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	dashboard.UserID = c.Get("User").(models.User).ID
 
