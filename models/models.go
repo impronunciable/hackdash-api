@@ -31,7 +31,7 @@ type Dashboard struct {
 	Description string `json:"description" valid:"required,alphanum"`
 	Link        string `json:"link" valid:"url"`
 	Open        bool   `json:"open"`
-	UserID      uint   `sql:"index"`
+	UserID      uint   `sql:"index" valid:"required"`
 }
 
 type Cover struct {
@@ -55,7 +55,7 @@ type Project struct {
 	gorm.Model
 	Title        string `valid:"required,alphanum,length(1|50)"`
 	Description  string
-	UserID       uint `sql:"index"`
+	UserID       uint `sql:"index" valid:"required"`
 	Status       string
 	Contributors []User `gorm:"many2many:project_contributors;"`
 	Followers    []User `gorm:"many2many:project_followers;"`
@@ -95,5 +95,10 @@ func Paginate(s *gorm.DB, c *echo.Context) *gorm.DB {
 
 func (d *Dashboard) BeforeSave() (err error) {
 	_, err = govalidator.ValidateStruct(d)
+	return
+}
+
+func (p *Project) BeforeSave() (err error) {
+	_, err = govalidator.ValidateStruct(p)
 	return
 }
