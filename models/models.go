@@ -26,7 +26,7 @@ func InitDB(dbConfig string) {
 
 type Dashboard struct {
 	gorm.Model
-	Slug        string    `json:"Slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
+	Slug        string    `json:"slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
 	Title       string    `json:"title" valid:"required,alphanum,length(1|50)"`
 	Description string    `json:"description" valid:"required,alphanum"`
 	Link        string    `json:"link" valid:"url"`
