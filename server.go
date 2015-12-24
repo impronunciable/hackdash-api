@@ -1,15 +1,17 @@
 package main
 
 import (
+	"app/controllers"
 	"app/middleware/auth"
 	"app/middleware/users"
 	"app/models"
-	"app/controllers"
 	"fmt"
-	"github.com/labstack/echo"
-	mw "github.com/labstack/echo/middleware"
 	"log"
 	"os"
+
+	"github.com/labstack/echo"
+	mw "github.com/labstack/echo/middleware"
+	"github.com/rs/cors"
 )
 
 var logger = log.New(os.Stdout, "", log.Ldate|log.Ltime|log.Lshortfile)
@@ -34,6 +36,7 @@ func main() {
 	// Basic middleware
 	app.Use(mw.Logger())
 	app.Use(mw.Recover())
+	app.Use(cors.Default().Handler)
 
 	// Initialize router. v3 is the first version for compatibility reasons
 	v3Router := app.Group("/v3")
