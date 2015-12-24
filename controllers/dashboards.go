@@ -20,7 +20,7 @@ func InitDashboardRoutes(r *echo.Group) {
 // Dashboard controllers
 func listDashboards(c *echo.Context) error {
 	dashboards := []models.Dashboard{}
-	models.Paginate(&models.DB, c).Preload("Projects").Find(&dashboards)
+	models.Paginate(&models.DB, c).Find(&dashboards)
 	return c.JSON(http.StatusOK, dashboards)
 }
 
