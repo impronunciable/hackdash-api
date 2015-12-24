@@ -20,7 +20,7 @@ func InitDashboardRoutes(r *echo.Group) {
 // Dashboard controllers
 func listDashboards(c *echo.Context) error {
 	dashboards := []models.Dashboard{}
-	models.Paginate(&models.DB, c).Find(&dashboards)
+	models.Paginate(&models.DB, c).Preload("Projects").Find(&dashboards)
 	return c.JSON(http.StatusOK, dashboards)
 }
 
@@ -32,7 +32,7 @@ func getDashboard(c *echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "id parameter missing or not a number")
 	}
 
-	if models.DB.First(&dashboard, id).RecordNotFound() {
+	if models.DB.Preload("Projects").First(&dashboard, id).RecordNotFound() {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 

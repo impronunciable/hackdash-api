@@ -26,12 +26,13 @@ func InitDB(dbConfig string) {
 
 type Dashboard struct {
 	gorm.Model
-	Slug        string `json:"Slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
-	Title       string `json:"title" valid:"required,alphanum,length(1|50)"`
-	Description string `json:"description" valid:"required,alphanum"`
-	Link        string `json:"link" valid:"url"`
-	Open        bool   `json:"open"`
-	UserID      uint   `sql:"index" valid:"required"`
+	Slug        string    `json:"Slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
+	Title       string    `json:"title" valid:"required,alphanum,length(1|50)"`
+	Description string    `json:"description" valid:"required,alphanum"`
+	Link        string    `json:"link" valid:"url"`
+	Open        bool      `json:"open"`
+	Projects    []Project `json:"projects"`
+	UserID      uint      `sql:"index" valid:"required"`
 }
 
 type Cover struct {
@@ -53,15 +54,15 @@ type User struct {
 
 type Project struct {
 	gorm.Model
-	Title        string `valid:"required,alphanum,length(1|50)"`
-	Description  string
-	UserID       uint `sql:"index" valid:"required"`
-	Status       string
-	Contributors []User `gorm:"many2many:project_contributors;"`
-	Followers    []User `gorm:"many2many:project_followers;"`
-	Cover        string `valid:"url"`
-	Link         string `valid:"url"`
-	Tags         []Tag  `gorm:"many2many:project_tags;"`
+	Title        string `json:"title" valid:"required,alphanum,length(1|50)"`
+	Description  string `json:"description"`
+	UserID       uint   `sql:"index" valid:"required"`
+	Status       string `json:"status"`
+	Contributors []User `json:"contributors" gorm:"many2many:project_contributors;"`
+	Followers    []User `json:"followers" gorm:"many2many:project_followers;"`
+	Cover        string `json:"cover" valid:"url"`
+	Link         string `json:"link" valid:"url"`
+	Tags         []Tag  `json:"tags" gorm:"many2many:project_tags;"`
 	DashboardID  uint   `sql:"index"`
 	Showcase     uint
 }
