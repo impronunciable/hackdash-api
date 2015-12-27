@@ -34,7 +34,7 @@ type Model struct {
 }
 
 type Dashboard struct {
-	gorm.Model
+	Model
 	Slug        string    `json:"slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
 	Title       string    `json:"title" valid:"required,alphanum,length(1|50)"`
 	Description string    `json:"description" valid:"required,alphanum"`
@@ -50,7 +50,7 @@ type Cover struct {
 }
 
 type User struct {
-	gorm.Model
+	Model
 	Name   string `valid:"required,alphanum,length(1|50)"`
 	Email  string `valid:"required,email"`
 	Avatar string `valid:"url"`
@@ -62,7 +62,7 @@ type User struct {
 }
 
 type Project struct {
-	gorm.Model
+	Model
 	Title        string `json:"title" valid:"required,alphanum,length(1|50)"`
 	Description  string `json:"description"`
 	UserID       uint   `sql:"index" valid:"required"`
@@ -82,7 +82,7 @@ type Tag struct {
 }
 
 type Collection struct {
-	gorm.Model
+	Model
 	UserID      uint   `sql:"index"`
 	Title       string `valid:"required,alphanum,length(1|50)"`
 	Description string
