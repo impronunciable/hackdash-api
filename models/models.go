@@ -72,7 +72,7 @@ type Project struct {
 	Cover        string `json:"cover" valid:"url"`
 	Link         string `json:"link" valid:"url"`
 	Tags         []Tag  `json:"tags" gorm:"many2many:project_tags;"`
-	DashboardID  uint   `sql:"index"`
+	DashboardID  uint   `json:"dashboard_id" sql:"index" valid:"required"`
 	Showcase     uint
 }
 

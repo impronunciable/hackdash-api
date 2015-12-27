@@ -41,9 +41,14 @@ func getProject(c *echo.Context) error {
 
 func createProject(c *echo.Context) error {
 	project := models.Project{}
+	dashboard := models.Dashboard{}
 
 	if err := c.Bind(&project); err != nil {
 		return err
+	}
+
+	if models.DB.First(&dashboard, project.DashboardID).RecordNotFound() {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid dashboard_id parameter")
 	}
 
 	// TODO add tags
