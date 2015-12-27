@@ -3,7 +3,6 @@ package controllers
 import (
 	"app/models"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo"
 )
@@ -11,10 +10,10 @@ import (
 // InitDashboardRoutes Initialize Dashboard routes
 func InitDashboardRoutes(r *echo.Group) {
 	r.Get("/dashboards", listDashboards)
-	r.Get("/dashboards/:id", getDashboard)
+	r.Get("/dashboards/:slug", getDashboard)
 	r.Post("/dashboards", createDashboard)
-	r.Patch("/dashboards/:id", updateDashboard)
-	r.Delete("/dashboards/:id", deleteDashboard)
+	r.Patch("/dashboards/:slug", updateDashboard)
+	r.Delete("/dashboards/:slug", deleteDashboard)
 }
 
 // Dashboard controllers
@@ -26,13 +25,13 @@ func listDashboards(c *echo.Context) error {
 
 func getDashboard(c *echo.Context) error {
 	dashboard := models.Dashboard{}
-	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	slug := c.Param("slug")
 
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "id parameter missing or not a number")
+	if slug == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "slug parameter missing")
 	}
 
-	if models.DB.Preload("Projects").First(&dashboard, id).RecordNotFound() {
+	if models.DB.Preload("Projects").Where("slug = ?", slug).First(&dashboard).RecordNotFound() {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
@@ -54,14 +53,14 @@ func createDashboard(c *echo.Context) error {
 }
 
 func updateDashboard(c *echo.Context) error {
-	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	slug := c.Param("slug")
 
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "id parameter missing or not a number")
+	if slug == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "slug parameter missing")
 	}
 
 	dashboard := models.Dashboard{}
-	if models.DB.First(&dashboard, id).RecordNotFound() {
+	if models.DB.Where("slug = ?", slug).First(&dashboard).RecordNotFound() {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
@@ -75,7 +74,6 @@ func updateDashboard(c *echo.Context) error {
 	}
 
 	record := map[string]interface{}{
-		"slug":        updatedData.Slug,
 		"title":       updatedData.Title,
 		"description": updatedData.Description,
 		"link":        updatedData.Link,
@@ -90,13 +88,13 @@ func updateDashboard(c *echo.Context) error {
 
 func deleteDashboard(c *echo.Context) error {
 	dashboard := models.Dashboard{}
-	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	slug := c.Param("slug")
 
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "id parameter missing or not a number")
+	if slug == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "slug parameter missing")
 	}
 
-	if models.DB.First(&dashboard, id).RecordNotFound() {
+	if models.DB.Where("slug = ?", slug).First(&dashboard).RecordNotFound() {
 		return echo.NewHTTPError(http.StatusNotFound)
 	}
 
