@@ -46,6 +46,10 @@ func createDashboard(c *echo.Context) error {
 	}
 	dashboard.UserID = c.Get("User").(models.User).ID
 
+	if dashboard.Title == "" {
+		dashboard.Title = dashboard.Slug
+	}
+
 	if err := models.DB.Save(&dashboard).Error; err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

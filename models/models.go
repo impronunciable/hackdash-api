@@ -37,7 +37,7 @@ type Dashboard struct {
 	Model
 	Slug        string    `json:"slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
 	Title       string    `json:"title" valid:"required,alphanum,length(1|50)"`
-	Description string    `json:"description" valid:"required,alphanum"`
+	Description string    `json:"description" valid:"alphanum"`
 	Link        string    `json:"link" valid:"url"`
 	Open        bool      `json:"open"`
 	Projects    []Project `json:"projects"`
