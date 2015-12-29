@@ -26,8 +26,8 @@ func main() {
 	auth0Secret, error := auth.DecodeBase64Secret(config.Auth0Secret)
 
 	if error != nil {
-		fmt.Errorf("Error decoding jwt secret: %s", error)
-		panic(error)
+		jwtErr := fmt.Errorf("Error decoding jwt secret: %s", error.Error())
+		panic(jwtErr)
 	}
 
 	//Initialize database
