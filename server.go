@@ -2,8 +2,8 @@ package main
 
 import (
 	"app/controllers"
+	"app/middleware"
 	"app/middleware/auth"
-	"app/middleware/users"
 	"app/models"
 	"fmt"
 	"log"
@@ -43,12 +43,8 @@ func main() {
 
 	if !config.DevMode {
 
-		//Init middlewares
-		jwtMiddleware := auth.NewJwtMiddleware("Bearer", auth0Secret, config.Auth0ClientId)
-		usersMiddleware := users.NewUsersMiddleware()
-
-		v3Router.Use(jwtMiddleware.Handler())
-		v3Router.Use(usersMiddleware.Handler())
+		restrict := middleware.NewRestrictMiddleware(auth0Secret, config.Auth0ClientId)
+		v3Router.Use(restrict.Handler())
 
 	} else {
 		logger.Printf("devMode is on, auth handler unregistered.")
