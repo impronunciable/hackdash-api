@@ -42,10 +42,7 @@ func main() {
 	v3Router := app.Group("/v3")
 
 	if !config.DevMode {
-
-		restrict := middleware.NewRestrictMiddleware(auth0Secret, config.Auth0ClientId)
-		v3Router.Use(restrict.Handler())
-
+		middleware.ConfigRestrictMiddleware(auth0Secret, config.Auth0ClientId)
 	} else {
 		logger.Printf("devMode is on, auth handler unregistered.")
 	}

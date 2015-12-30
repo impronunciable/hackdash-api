@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	mw "app/middleware"
 	"app/models"
 	"net/http"
 	"strconv"
@@ -12,9 +13,9 @@ import (
 func InitProjectRoutes(r *echo.Group) {
 	r.Get("/projects", listProjects)
 	r.Get("/projects/:id", getProject)
-	r.Post("/projects", createProject)
-	r.Patch("/projects/:id", updateProject)
-	r.Delete("/projects/:id", deleteProject)
+	r.Post("/projects", mw.Secure(createProject))
+	r.Patch("/projects/:id", mw.Secure(updateProject))
+	r.Delete("/projects/:id", mw.Secure(deleteProject))
 }
 
 // Project controllers
