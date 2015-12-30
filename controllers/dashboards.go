@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	mw "app/middleware"
 	"app/models"
 	"net/http"
 
@@ -11,9 +12,9 @@ import (
 func InitDashboardRoutes(r *echo.Group) {
 	r.Get("/dashboards", listDashboards)
 	r.Get("/dashboards/:slug", getDashboard)
-	r.Post("/dashboards", createDashboard)
-	r.Patch("/dashboards/:slug", updateDashboard)
-	r.Delete("/dashboards/:slug", deleteDashboard)
+	r.Post("/dashboards", mw.Secure(createDashboard))
+	r.Patch("/dashboards/:slug", mw.Secure(updateDashboard))
+	r.Delete("/dashboards/:slug", mw.Secure(deleteDashboard))
 }
 
 // Dashboard controllers
