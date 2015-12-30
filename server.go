@@ -30,13 +30,20 @@ func main() {
 		panic(jwtErr)
 	}
 
+	// CORS options
+	c := cors.New(cors.Options{
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "POST", "PATCH", "DELETE"},
+	})
+
 	//Initialize database
 	models.InitDB(config.Database)
 
 	// Basic middleware
 	app.Use(mw.Logger())
 	app.Use(mw.Recover())
-	app.Use(cors.Default().Handler)
+	app.Use(c.Handler)
 
 	// Initialize router. v3 is the first version for compatibility reasons
 	v3Router := app.Group("/v3")
