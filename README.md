@@ -24,7 +24,7 @@ var clientID = '...client_id...';
 ​
 var lock = new Auth0Lock(clientID, domain);
 lock.show({
-  authParams: { scope: 'openid' },
+  authParams: { scope: 'openid first_name family_name email picture' },
 }, function (err, profile, token) {
   console.log(err, token);
 });
