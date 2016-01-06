@@ -2,7 +2,6 @@ package users
 
 import (
 	"app/models"
-	"fmt"
 	"github.com/labstack/echo"
 	"strings"
 )
