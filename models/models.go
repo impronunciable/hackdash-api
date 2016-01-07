@@ -36,8 +36,8 @@ type Model struct {
 type Dashboard struct {
 	Model
 	Slug        string    `json:"slug" sql:"unique_index" valid:"required,alphanum,length(5|10),lowercase"`
-	Title       string    `json:"title" valid:"required,alphanum,length(1|50)"`
-	Description string    `json:"description" valid:"alphanum"`
+	Title       string    `json:"title" valid:"required,length(1|50)"`
+	Description string    `json:"description"`
 	Link        string    `json:"link" valid:"url"`
 	Open        bool      `json:"open"`
 	Projects    []Project `json:"projects"`
@@ -51,7 +51,7 @@ type Cover struct {
 
 type User struct {
 	Model
-	Name   string `valid:"required,alphanum,length(1|50)"`
+	Name   string `valid:"required,length(1|50)"`
 	Email  string `valid:"required,email"`
 	Avatar string `valid:"url"`
 	Bio    string
@@ -63,7 +63,7 @@ type User struct {
 
 type Project struct {
 	Model
-	Title         string `json:"title" valid:"required,alphanum,length(1|50)"`
+	Title         string `json:"title" valid:"required,length(1|50)"`
 	Description   string `json:"description"`
 	UserID        uint   `sql:"index" valid:"required"`
 	Status        string `json:"status"`
@@ -79,13 +79,13 @@ type Project struct {
 
 type Tag struct {
 	ID    uint   `gorm:"primary_key"`
-	Value string `valid:"required,alphanum"`
+	Value string `valid:"required"`
 }
 
 type Collection struct {
 	Model
 	UserID      uint   `sql:"index"`
-	Title       string `valid:"required,alphanum,length(1|50)"`
+	Title       string `valid:"required,length(1|50)"`
 	Description string
 	Dashboards  []Dashboard `gorm:"many2many:collection_dashboards;"`
 }
