@@ -48,13 +48,14 @@ func createProject(c *echo.Context) error {
 		return err
 	}
 
-	if models.DB.First(&dashboard, project.DashboardID).RecordNotFound() {
+	if models.DB.Where("slug = ?", project.DashboardSlug).First(&dashboard).RecordNotFound() {
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid dashboard_id parameter")
 	}
 
 	// TODO add tags
 	user := c.Get("User").(models.User)
 	project.UserID = user.ID
+	project.DashboardID = dashboard.ID
 	project.Contributors = []models.User{user}
 	project.Followers = []models.User{user}
 

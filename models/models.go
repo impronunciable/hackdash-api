@@ -63,17 +63,18 @@ type User struct {
 
 type Project struct {
 	Model
-	Title        string `json:"title" valid:"required,alphanum,length(1|50)"`
-	Description  string `json:"description"`
-	UserID       uint   `sql:"index" valid:"required"`
-	Status       string `json:"status"`
-	Contributors []User `json:"contributors" gorm:"many2many:project_contributors;"`
-	Followers    []User `json:"followers" gorm:"many2many:project_followers;"`
-	Cover        string `json:"cover" valid:"url"`
-	Link         string `json:"link" valid:"url"`
-	Tags         []Tag  `json:"tags" gorm:"many2many:project_tags;"`
-	DashboardID  uint   `json:"dashboard_id" sql:"index" valid:"required"`
-	Showcase     uint
+	Title         string `json:"title" valid:"required,alphanum,length(1|50)"`
+	Description   string `json:"description"`
+	UserID        uint   `sql:"index" valid:"required"`
+	Status        string `json:"status"`
+	Contributors  []User `json:"contributors" gorm:"many2many:project_contributors;"`
+	Followers     []User `json:"followers" gorm:"many2many:project_followers;"`
+	Cover         string `json:"cover" valid:"url"`
+	Link          string `json:"link" valid:"url"`
+	Tags          []Tag  `json:"tags" gorm:"many2many:project_tags;"`
+	DashboardID   uint   `json:"dashboard_id" sql:"index" valid:"required"`
+	DashboardSlug string `json:"dashboard_slug" sql:"index"`
+	Showcase      uint
 }
 
 type Tag struct {
